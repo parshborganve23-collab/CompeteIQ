@@ -1,0 +1,386 @@
+/* Animated Workflow Visualization — pure black + neon silver / chrome / platinum */
+.awf-page {
+  background: #000000;
+  color: #e9edf2;
+  min-height: 100%;
+  padding: clamp(16px, 3vw, 32px);
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+}
+
+.awf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.awf-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #aab2bd;
+  margin-bottom: 4px;
+}
+
+.awf-header h1 {
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+  background: linear-gradient(180deg, #fff 0%, #aab2bd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.awf-event-meta {
+  font-size: 0.9rem;
+  color: #8b939e;
+  margin-top: 6px;
+}
+
+.awf-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.awf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: linear-gradient(180deg, #141414, #0a0a0a);
+  color: #e9edf2;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.awf-btn:hover {
+  border-color: #aab2bd;
+  background: #0f1115;
+  box-shadow: 0 0 20px rgba(170, 178, 189, 0.12);
+}
+
+.awf-btn.ghost {
+  background: transparent;
+  border-color: #2a2a2a;
+  color: #aab2bd;
+}
+
+.awf-btn.ghost:hover {
+  border-color: #aab2bd;
+  color: #ffffff;
+}
+
+.awf-btn.awf-btn-primary {
+  background: linear-gradient(180deg, #fafcff, #aab2bd);
+  color: #000;
+  border-color: transparent;
+}
+
+.awf-btn.awf-btn-primary:hover {
+  box-shadow: 0 0 30px rgba(170, 178, 189, 0.4);
+}
+
+.awf-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.awf-body {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Pipeline */
+.awf-pipeline h2,
+.awf-collab-header h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 14px;
+}
+
+.awf-stage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.awf-stage {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #1a1a1a;
+  background: #0a0a0a;
+  cursor: default;
+  transition: all 0.25s;
+}
+
+.awf-stage.awf-stage-active {
+  border-color: #aab2bd;
+  background: #0f1115;
+  box-shadow: 0 0 24px rgba(170, 178, 189, 0.08);
+}
+
+.awf-stage.awf-stage-completed {
+  border-color: #333;
+  background: #080a0c;
+}
+
+.awf-stage-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  background: #050505;
+  display: grid;
+  place-items: center;
+  color: #8b939e;
+  flex: 0 0 auto;
+}
+
+.awf-stage.awf-stage-active .awf-stage-icon {
+  background: #141414;
+  border-color: #aab2bd;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(170, 178, 189, 0.3);
+  animation: awfPulse 2s ease-in-out infinite;
+}
+
+.awf-stage-info {
+  min-width: 0;
+}
+
+.awf-stage-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #e9edf2;
+  overflow-wrap: anywhere;
+}
+
+.awf-stage-status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.awf-stage.waiting .awf-stage-status { color: #4a525e; }
+.awf-stage.running .awf-stage-status {
+  color: #aab2bd;
+  animation: awfBlink 1.5s ease-in-out infinite;
+}
+.awf-stage.completed .awf-stage-status { color: #d1e9ff; }
+.awf-stage.failed .awf-stage-status { color: #ff7a7a; }
+
+.awf-stage-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.awf-stage.awf-stage-active .awf-stage-glow {
+  opacity: 0.35;
+  box-shadow: 0 0 30px rgba(170, 178, 189, 0.25);
+}
+
+@keyframes awfPulse {
+  0%, 100% { box-shadow: 0 0 16px rgba(170, 178, 189, 0.3); }
+  50% { box-shadow: 0 0 32px rgba(170, 178, 189, 0.6); }
+}
+
+@keyframes awfBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Collaboration */
+.awf-collab {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.awf-collab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.awf-mode-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #333;
+  background: #050505;
+  color: #aab2bd;
+}
+
+.awf-agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.awf-agent-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #1a1a1a;
+  background: #0a0a0a;
+}
+
+.awf-agent-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  background: #050505;
+  display: grid;
+  place-items: center;
+  color: #8b939e;
+  flex: 0 0 auto;
+}
+
+.awf-agent-card.awf-agent-running .awf-agent-icon {
+  border-color: #aab2bd;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(170, 178, 189, 0.3);
+  animation: awfPulse 2s ease-in-out infinite;
+}
+
+.awf-agent-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #e9edf2;
+  overflow-wrap: anywhere;
+}
+
+.awf-agent-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid #333;
+  background: #050505;
+  color: #6f7782;
+}
+
+.awf-agent-card.awf-agent-running .awf-agent-pill {
+  color: #aab2bd;
+  border-color: #aab2bd;
+  background: #0f1115;
+}
+
+.awf-agent-output {
+  font-size: 0.75rem;
+  color: #8b939e;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+.awf-logs {
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  background: #050505;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.awf-logs h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #aab2bd;
+  margin: 0;
+  padding: 10px 14px;
+  border-bottom: 1px solid #1a1a1a;
+  background: #0a0a0a;
+}
+
+.awf-log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.awf-log {
+  display: flex;
+  gap: 8px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.awf-log-time {
+  color: #4a525e;
+  font-size: 0.75rem;
+  flex: 0 0 auto;
+}
+
+.awf-log-stage {
+  color: #8b939e;
+  font-size: 0.78rem;
+  font-weight: 600;
+  flex: 0 0 auto;
+  min-width: 120px;
+}
+
+.awf-log-text {
+  color: #e9edf2;
+  overflow-wrap: anywhere;
+}
+
+.awf-log.success .awf-log-text { color: #d1e9ff; }
+.awf-log.error .awf-log-text { color: #ff7a7a; }
+
+.awf-log-empty {
+  padding: 10px 14px;
+  color: #6f7782;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* Controls */
+.awf-controls {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 920px) {
+  .awf-body {
+    grid-template-columns: 1fr;
+  }
+  .awf-controls {
+    flex-direction: column;
+  }
+}
